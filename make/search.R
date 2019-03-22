@@ -1,7 +1,7 @@
 ## load these packages
-library(tfse)
-library(rtweet)
-library(dplyr)
+#library(tfse)
+#library(rtweet)
+#library(dplyr)
 
 ## read/set starting values
 #all_ids <- readRDS("data/all_ids.rds")
@@ -21,10 +21,7 @@ search_terms <- c(
   ## grouped words
   '(elder maga)',
   '(march maga)',
-  '(protest maga)',
-  '(protestor maga)',
-  '(maga high school)',
-  '(maga stare)',
+  '(maga school)',
   '(maga veteran)',
   '(maga phillips)',
   '(maga philips)',
@@ -33,19 +30,18 @@ search_terms <- c(
   '(maga students)',
   '(maga boy)',
   '(maga student)',
-  '(maga catholic)',
   ## phrases
   '"nathan phillips"',
-  '"nathan philips"',
   '"nick sandmann"',
-  '"nick sandman"',
   '"lincoln memorial"',
   '"Indigenous Peoples"',
   '"march for life"',
-  '"Native American"',
   '"maga hat"',
   '"maga hats"'
 )
+## wrap in parentheses just in case
+search_terms <- ifelse(grepl("^\\(", search_terms),
+  search_terms, paste0("(", search_terms, ")"))
 
 ## build query
 search_query <- paste(
