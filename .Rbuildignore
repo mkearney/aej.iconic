@@ -1,3 +1,5 @@
+^\.make*$
+^\.DS_Store$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^aej\.Rproj$
