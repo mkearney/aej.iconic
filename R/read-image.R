@@ -1,11 +1,4 @@
 
-img_id <- function(x) gsub(".*/|\\.[^.]+$", "", x)
-
-tiny_img <- function(x) {
-  x <- ifelse(grepl("^http", x), img_id(x), x)
-  paste0("https://pbs.twimg.com/media/", x, "?format=jpg&name=tiny")
-}
-
 download_image <- function(x, fl) {
   if (!file.exists(fl)) {
     tryCatch(download.file(x, fl, quiet = TRUE), error = function(e) NULL)
@@ -33,18 +26,9 @@ read_image <- function(f, width = 33, height = 64) {
   }, error = function(e) list())
 }
 
-read_images <- function(x) {
-  i <- future.apply::future_lapply(x, read_image)
+read_images <- function(x, width = 33, height = 64) {
+  future::plan(future::multiprocess)
+  i <- future.apply::future_lapply(x, read_image, width = width, height = height)
   names(i) <- x
   i[lengths(i) > 0]
 }
-
-correlate <- function(x) {
-  r <- future.apply::future_sapply(x, function(.x) cor(tmp, .x, use = "complete.obs"))
-  tibble::tibble(
-    image = names(x),
-    r = r
-  )
-}
-
-

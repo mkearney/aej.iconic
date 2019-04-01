@@ -1,4 +1,6 @@
-^\.make*$
+^make*$
+^images*$
+^data-raw$
 ^\.DS_Store$
 ^LICENSE\.md$
 ^README\.Rmd$

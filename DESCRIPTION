@@ -14,6 +14,10 @@ LazyData: true
 RoxygenNote: 6.1.1
 Imports: 
     magrittr,
-    tfse
+    tfse,
+    tibble,
+    OpenImageR,
+    future,
+    future.apply
 URL: https://github.com/mkearney/aej.iconic
 BugReports: https://github.com/mkearney/aej.iconic/issues
