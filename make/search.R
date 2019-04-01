@@ -62,6 +62,8 @@ for (i in seq_along(s)) {
   mp <- s[[i]]$mp
 }
 
+d <- h.rtweet::lookup_all_tweets(all_ids)
+
 ## save all_ids
 all_ids <- unique(c(all_ids, unlist(purrr::map(s, "status_id"))))
 alr_ids <- unique(c(readRDS("data/all_data_ids.rds"),

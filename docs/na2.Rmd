@@ -1,0 +1,65 @@
+---
+title: "Title"
+author: "Author"
+date: "`r Sys.Date()`"
+output: mizzourahmd::mizzou_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+```
+
+https://www.sciencedirect.com/science/article/pii/S2468696417301088
+
+In order to identify relations between Twitter topics, we derived the corresponding hashtag networks. The hashtag network derived from the German language data-set is an undirected network and consists of 5233 distinct vertices and 23,535 edges, with an average vertex degree of 9.01. In total, the network includes nine connected components. In particular, some hashtags (vertices in the hashtag networks) are isolated and thus never used in a combination with other hashtags.
+
+The vertices (hashtags) with the largest degree (δ) are #bpw16 (δ=3872),15 #Hofer (δ=1597), #vdb (δ=1464), #vanderbellen (δ=1054), and #Österreich (δ=708). Moreover, it is worth mentioning that in the German language hashtag network, hashtags #MarineLePen (δ=325), #ViktorOrban (δ=293), and #Trump (δ=233) are among the top fifteen vertices with respect to the vertex degree. The German language hashtag network also shows that both candidates were addressed in a positive as well as a negative context (see below).
+
+To examine the context of the discussion related to different hashtags, we also derived an ego-network for each candidate (see Figs. 17 –20). The German language ego-network of Van der Bellen consists of 1463 vertices and 9878 edges (network density  ≈ 0.01), while Norbert Hofer’s German language ego-network consists of 1596 vertices and 10,846 edges (network density  ≈ 0.01).
+
+Fig. 17
+Download full-size image
+Fig. 17. German ego network of Van der Bellen.
+
+Fig. 20
+Download full-size image
+Fig. 20. English ego network of Hofer.
+
+An ego-network consisting of hashtags may reveal valuable insights about the topics people associate with each candidate. Thus, after a thorough examination of the hashtags directly connected to each candidate, we manually identified five categories of hashtags and assigned the corresponding category to each hashtag in the data-set by following the open coding approach. These categories include:
+•
+Supporting: hashtags that directly support a candidate (here we excluded the general hashtag which carries the candidate’s name only because it can either appear in a tweet with negative or positive sentiment polarities). Examples include #vote4vdb, #teamvanderbellen, #Hofer4President, #hofer2016.
+
+•
+General: hashtags that carry general information about the 2016 Austrian presidential elections (e.g., newspaper titles, TV station names, party names, important dates). Examples include #bpw16, #presidentialElection, #norberthofer, #VanDerBellen.
+
+•
+Against: hashtags that directly oppose (speak against) a candidate, e.g., #notoVDB, #VollDerBluff, and #womenAgainsthofer, #nohofer.
+
+•
+Important topics: hashtags that refer to important topics discussed during the presidential election, such as #Islam, #HillaryClinton, #Trump, #terror, #Brexit, #Burka.
+
+•
+Other: as well as other (hashtags that neither support, go against, carry general information about the elections, or refer to important topics). Examples include #Styria, #Monday, #Christmas.
+
+
+Figs. 17 and 18 show an extract of the German language ego-networks including the vertices which belong to the categories supporting, general, against, and important topics (i.e. vertices belonging to the “other” category have been excluded from these plots). The corresponding ego-network for Hofer includes 622 vertices and 4826 edges (network density  ≈ 0.025). The respective ego-network of Van der Bellen includes 482 vertices and 3938 edges (network density  ≈ 0.034).16 Vertices in the Supporting category are plotted in green color, vertices from the Against category are plotted in red, vertices on Important topics in yellow, and General information in gray.
+
+Fig. 18
+Download full-size image
+Fig. 18. German ego network of Hofer.
+
+Compared to the German hashtag ego-network, the English language ego-network includes a smaller number of vertices, indicating a lower variety of hashtags (see Figs. 19 and 20). In particular, the corresponding ego-network of Van der Bellen includes 131 vertices and 1057 edges (network density  ≈ 0.124) while Hofer’s ego-includes 293 vertices and 1927 edges (network density  ≈ 0.045). The low number of unique hashtags (vertices) results from the fact that the English data-set predominantly consists of retweets (see above).
+
+Fig. 19
+Download full-size image
+Fig. 19. English ego network of Van der Bellen.
+
+Figs. 17–20 show that there is a considerable difference in the way Twitter users refer to each candidate in their tweets. Both, the German and English hashtag ego-networks of Norbert Hofer exhibit more vertices (hashtags) that directly refer to the candidate in a negative context (e.g., #NoToHofer) as compared to the ego-networks of Alexander Van der Bellen (see also Table 3). On the other hand, hashtags that put a candidate in a positive light are used more often in Van der Bellen’s ego-networks, as compared to the ones of Norbert Hofer. In Table 3, we provide a summary of the relative sizes of the hashtag categories, with the maximum value highlighted in bold respectively.
+
+Table 3. Summary of the hashtag categories.
+
+Supporting (%)	Against (%)	General (%)	Important topics (%)
+VDB (de)	7.68	3.73	43.15	45.44
+VDB (en)	3.06	0	50.38	46.56
+NH (de)	1.93	18.49	41.64	37.94
+NH (en)	2.39	4.44	32.42	60.75
