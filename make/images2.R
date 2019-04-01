@@ -201,7 +201,8 @@ p <- ggplot(n, aes(x = x, y = y, xend = xend, yend = yend)) +
 #  gganimate::enter_fade() +
 #  gganimate::exit_fade()
 
-p
+p +
+  ggsave("make/network.png", width = 9, height = 6, units = "in")
 
 #gganimate::animate(p, nframes = n_uq(ca), fps = 3)
 
