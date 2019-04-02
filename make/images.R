@@ -3,10 +3,11 @@
 
 ## load tfse
 library(tfse)
+suppressPackageStartupMessages(library(dplyr))
 
 ## read all data files
-d <- fs::dir_ls("make/data") %>%
-  grep("ids", ., invert = TRUE, value = TRUE) %>%
+.d <- fs::dir_ls("make/data") %>%
+  grep("ids|training", ., invert = TRUE, value = TRUE) %>%
   purrr::map(readRDS) %>%
   dplyr::bind_rows() %>%
   dplyr::filter(!duplicated(status_id)) %>%
@@ -18,15 +19,15 @@ select_and_pull <- function(.data, ...) {
   unique(tfse::na_omit(unlist(.data, use.names = FALSE)))
 }
 
-d$media_id <- img_id(d$media_url)
-d$ext_media_id <- img_id(d$ext_media_url)
+.d$media_id <- img_id(.d$media_url)
+.d$ext_media_id <- img_id(.d$ext_media_url)
 
 select_and_pull(d, media_url, ext_media_url) %>%
   img_tiny() -> images
 
 r <- readRDS("make/data/cor-ids.rds")
 
-images <- r$image[r$image %in% r$image[r$r > .45 & !is.na(r$r)]]
+images <- r$image[r$image %in% r$image[r$r > .40 & !is.na(r$r)]]
 
 
 #st <- seq(1, length(images), 2000)

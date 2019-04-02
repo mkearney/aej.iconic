@@ -1,0 +1,22 @@
+---
+output: github_document
+---
+
+Tweets (n = 305,629) were collected from Twitter's standard search API via rtweet (Kearney, 2019). The search query consisted of several conditional terms and phrases related to the event(s) in question–e.g., 'covington', 'maga hat', 'nathan phillips', 'march for life'. Statuses were collected for roughly four weeks, ranging in dates from January 18, 2019 to February 14, 2019. Initial searches did not include retweets, but additional API queries were sent to collect retweet-specific data only for those statuses classified as containing the image in question.
+
+Upon completion of the initial data collection, image paths were used to programatically downloaded and then convert all attached images into numeric matrices. The matrices were then standardized to the size of the reference photo and then bivariate correlations were used to identify matching photos. After performing several exploratory checks, an appropriate correlation coefficient cutoff value of .45 was set, meaning images with correlation coefficients of .45 or more were classified (n = 1,824) [and added as dichotomous dummy-coded variable] as matching the reference.
+
+Compared to others in the sample, the users sharing the reference photo tended to be more active and more popular. The reference photo was shared by 1,296 different accounts, 196 (15.1%) of which were Twitter verified. On average the image posting-users had been on Twitter for six years (Mean account age = 6), tweeted 20,409 times (Mean statuses = 102,098), and had 1,056 followers (Mean = 243,276) and 673 friends (Mean friends = 5,262). In contrast, among the non-image sharing users in the sample, 15,970 (10.4%) were verified, and on average users tweeted 8,374 times (Mean statuses = 65,799) and had 1,056 followers (Mean = 27,161) and 759 friends (Mean friends = 3,654).
+
+To map the trajectory or rate of shares of the photo, two hourly time series were constructed–first by summing the total number of unique users who had shared the reference photo and second by summing the total number of unique users who had interacted (by way of retweet, reply, mention, or quote) with a tweet containing the reference photo. The cumulative totals (running count of unique users exposed to the reference photo) for each time series are mapped over time and displayed in Figure 1. As the plot makes clear, for the week following its initial appearance on Twitter, the photo spread quickly before tailing off around February 1st.
+
+To get a better sense of interactions between users, network analysis was performed using the igraph package (Csardi & Nepusz, 2006). A corresponding network visualization, with edges representing interactions between users with tweets containing the reference photo and nodes representing whether users had shared the reference photo (color) and whether they were verified (shape).
+
+
+```{r}
+filter(.d, is_img) %>% summarise(users = tfse::n_uq(user_id), verified = sum(verified), followers = median(followers_count), friends = median(friends_count), created_at = median(account_created_at), en = sum(lang == "en"), tweets = median(statuses_count))
+
+filter(.d, is_img) %>% summarise(users = tfse::n_uq(user_id), verified = sum(verified), followers = mean(followers_count), friends = mean(friends_count), created_at = mean(account_created_at), en = sum(lang == "en"), tweets = mean(statuses_count))
+
+```
+

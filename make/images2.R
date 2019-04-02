@@ -11,14 +11,76 @@ r %>%
   dplyr::filter(r >= .4255) %>%
   dplyr::pull(id) -> maga_hat_ids
 
-sum(d$is_img)
+sum(.d$is_img)
 maga_hat_ids <- img_id(names(vr))
-d$is_img <- purrr::map_lgl(d$media_id, ~ any(.x %in% maga_hat_ids))
-d$is_img <- ifelse(is.na(d$is_img),
-  purrr::map_lgl(d$ext_media_id, ~ any(.x %in% maga_hat_ids)), d$is_img)
+maga_hat_ids <- img_id(images)
 
-table(d$is_img)
+.d$is_img <- purrr::map_lgl(.d$media_id, ~ any(.x %in% maga_hat_ids))
+.d$is_img <- ifelse(is.na(.d$is_img),
+  purrr::map_lgl(.d$ext_media_id, ~ any(.x %in% maga_hat_ids)), .d$is_img)
 
+table(.d$is_img)
+
+
+sids2s <- filter(.d, is_img) %>% pull(status_id) -> s2s
+st <- seq(1, length(sids2s), 15)
+en <- seq(16, length(sids2s), 15)
+sum(nchar(sids2s[1:10]) + 3)
+fq <- function(o, n = 450) {
+  o <- paste0("url:", o)
+  i <- 0
+  j <- 0
+  s <- character()
+  while(length(o) > 0) {
+    x <- ""
+    while ((sum(nchar(x) + 3) + 23) < n) {
+      i <- i + 1
+      x <- x[x != ""]
+      x <- c(x, o[1])
+      o <- o[-1]
+      if (length(o) == 0) break
+    }
+    j <- j + 1
+    s[length(s) + 1] <- paste0("url:twitter url:status (",
+      paste0(x, collapse = " OR "), ")")
+  }
+  s
+}
+fq(sids2s[1:100], n = 500)[1]
+sqs <- fq(sids2s)
+.tw <- vector("list", length(sqs))
+for (i in seq_along(.tw)) {
+  .tw[[i]] <- h.rtweet::h.search_tweets(sqs[i], n = 300, attempts = 1)
+  tfse::print_complete(i)
+}
+
+.rt <- rtweet::lookup_tweets(unlist(purrr::map(.tw, "status_id")))
+get_lots_of_retweets <- function(x) {
+  rts <- vector("list", length(x))
+  st <- Sys.time() + 15 * 60
+  for (i in seq_along(x)) {
+    if ((i %% 295) == 0) {
+      s <- as.numeric(difftime(st, Sys.time()), "secs")
+      if (s > 0) {
+        tfse::print_start("Sleeping for ", round(s/60, 1), " mins...")
+        Sys.sleep(s)
+      }
+    }
+    rts[[i]] <- tryCatch(rtweet::get_retweets(x[i]),
+      error = function(e) NULL)
+    tfse::print_complete(i, "/", length(rts))
+  }
+  rts
+}
+.rt
+str(.rt)
+range(.d$created_at)
+filter(.d, is_img, !is_retweet, created_at > "2019-01-10") %>% pull(status_id) -> ssss
+294*2
+get_lots_of_retweets(ssss[589:length(ssss)]) -> .rt3
+
+.rt1 <- .rt
+.rt <- bind_rows(.rt1, bind_rows(.rt2), bind_rows(.rt3)) %>% dplyr::filter(!duplicated(status_id))
 
 library(dplyr)
 
@@ -38,8 +100,9 @@ get_status_replies <- function(.d) {
   }
   tw
 }
-
-
+tfse::save_RDS(.rt, "make/data/all-all-data.rds")
+.d <- bind_rows(.rt, .d) %>%
+  filter(!duplicated(status_id))
 
 d %>%
   dplyr::filter(is_img) -> ttt
@@ -54,15 +117,15 @@ for (i in seq_along(o)) {
 oo <- dplyr::bind_rows(o)
 replies <- tfse::read_RDS("make/data/replies.rds")
 
-replies <- dplyr::bind_rows(d, oo) %>%
+replies <- dplyr::bind_rows(.d, oo) %>%
   dplyr::filter(!duplicated(status_id)) %>%
   dplyr::filter(!is.na(reply_to_status_id)) %>%
-  dplyr::filter(reply_to_status_id %in% d$status_id)
+  dplyr::filter(reply_to_status_id %in% .d$status_id)
 
-replies <- dplyr::bind_rows(d, oo) %>%
+replies <- dplyr::bind_rows(.d, oo) %>%
   dplyr::filter(!duplicated(status_id)) %>%
   dplyr::filter(!is.na(reply_to_status_id)) %>%
-  dplyr::filter(reply_to_status_id %in% c(replies$status_id, d$status_id))
+  dplyr::filter(reply_to_status_id %in% c(replies$status_id, .d$status_id))
 
 
 
@@ -72,9 +135,9 @@ replies$is_img <- ifelse(is.na(replies$is_img),
 
 replies <- tfse::read_RDS("make/data/replies.rds")
 
-all_img_ids <- unique(c(d$status_id[d$is_img], replies$status_id[replies$is_img]))
+all_img_ids <- unique(c(.d$status_id[.d$is_img], replies$status_id[replies$is_img]))
 
-m <- rbind(replies, d) %>%
+m <- rbind(replies, .d) %>%
   dplyr::mutate(keep = is_img | reply_to_status_id %in% all_img_ids,
     reply1 = reply_to_status_id %in% status_id[is_img],
     reply2 = reply_to_status_id %in% reply1,
@@ -83,7 +146,7 @@ m <- rbind(replies, d) %>%
     reply5 = reply_to_status_id %in% reply4) %>%
   dplyr::filter(keep | is_img | reply_to_status_id %in% status_id |
       reply1 | reply2 | reply3 | reply4 | reply5)
-m <- rbind(replies, d) %>%
+m <- rbind(replies, .d) %>%
   dplyr::mutate(keep = is_img | reply_to_status_id %in% all_img_ids,
     reply1 = reply_to_status_id %in% status_id[is_img],
     reply2 = reply_to_status_id %in% reply1,
@@ -149,6 +212,7 @@ adj_mat(ftf) -> am
 
 nrow(am)
 library(dplyr)
+
 n <- network::network(am, directed = TRUE)
 
 library(network)
@@ -181,14 +245,18 @@ ca <- ifelse(is.na(ca),
   ca)
 ca <- m$created_at[ca]
 ca <- rtweet::round_time(ca, "hours")
+#
 
 n %v% "created_at" <- rank(as.numeric(ca))
 n %v% "is_img" <- matchr(n %v% "vertex.names", m$user_id, m$is_img, FALSE)
 n %v% "verified" <- matchr(n %v% "vertex.names", m$user_id, m$verified, FALSE)
 n %v% "followers_count" <- matchr(n %v% "vertex.names", m$user_id, m$followers_count, 0)
 library(ggplot2)
+library(network)
+n
 
-p <- ggplot(n, aes(x = x, y = y, xend = xend, yend = yend)) +
+
+p <- ggplot(ggnetwork::ggnetwork(n), aes(x = x, y = y, xend = xend, yend = yend)) +
   ggnetwork::geom_edges(color = "#666666", alpha = .5, curvature = .2, size = .6) +
   ggnetwork::geom_nodes(aes(fill = is_img, size = sqrt(followers_count + 1),
     shape = verified),
@@ -204,7 +272,7 @@ p <- ggplot(n, aes(x = x, y = y, xend = xend, yend = yend)) +
 p +
   ggsave("make/network.png", width = 9, height = 6, units = "in")
 
-#gganimate::animate(p, nframes = n_uq(ca), fps = 3)
+=-#gganimate::animate(p, nframes = n_uq(ca), fps = 3)
 
 
 
@@ -219,7 +287,7 @@ tibble::tibble(user_id = n %v% "vertex.names",
   created_at = as.integer(factor(n %v% "created_at")),
   is_img = n %v% "is_img",
   verified = n %v% "is_img") -> y
-y$created_at <- ca2
+y$created_at <- ca
 
 y %>%
   mutate(dup = !duplicated(user_id)) %>%
